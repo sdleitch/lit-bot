@@ -1,32 +1,42 @@
 require 'tactful_tokenizer'
 
-def merge_sentences(sentence_array)
+def merge_phrases(phrase_array)
   count = 0
-  while count + 1 < sentence_array.length
-    if sentence_array[count] != nil && sentence_array[count].length + sentence_array[count+1].length < 140
-      sentence_array[count] = sentence_array[count..count+1].join(' ')
-      sentence_array.delete_at(count+1)
-    end
-    count += 1
+  until phrase_array[count+1] == nil || phrase_array[count].length + phrase_array[count+1].length > 140
+    phrase_array[count] = phrase_array[count] + " " + phrase_array[count+1]
+    phrase_array.delete_at(count+1)
   end
-  sentence_array
+  count += 1
+  phrase_array
 end
 
 def break_sentence(sentence)
+  phrases = []
   if sentence.length > 140
-    if sentence =~ /.{1,139}[,:;].{1,139}/
-      sentences = sentence.split(/([,:;])\s/).each_slice(2).map(&:join).map(&:strip)
-      return merge_sentences(sentences)
-    elsif sentence =~ /.{0,139}["'\u201c].{1,139}["'\u201d].{0,139}/
-
+    if sentence =~ /.{1,140}[,:;].{1,140}/
+      phrases = sentence.split(/([,:;])\s/).each_slice(2).map(&:join).map(&:strip)
+    elsif sentence =~ /.{0,47}[\u201c].{1,46}[\u201d].{0,47}/
+      phrases = sentence.split(/(['\u201c\u201d])/).each_slice(2).map(&:join).map(&:strip)
+    else
+      words = sentence.split(' ')
+      pos = 0
+      phrases = [""]
+      phrase = ""
+      words.each do |word|
+        if phrase.length + word.length < 140
+          phrase = phrase + " " + word
+          phrases[pos] = phrase
+        else
+          phrase = word
+          pos += 1
+        end
+      end
+      phrases.each { |phrase| phrase.strip! }
     end
+  else
+    phrases << sentence
   end
-end
-
-def s_print(s)
-  to_print = s
-  puts to_print
-  sleep 1
+  merge_phrases(phrases)
 end
 
 # s.split(/([?!.])/).each_slice(2).map(&:join).map(&:strip)
@@ -37,13 +47,5 @@ doc = File.open('works/100YearsOfSolitude.txt')
 sentences = tokenizer.tokenize_text(doc)
 
 sentences.each do |sentence|
-  to_print = ""
-  if sentence.length <= 140
-    s_print(sentence)
-  elsif sentence =~ /.{1,139}[,:;].{1,139}/
-    temp_arr = break_sentence(sentence)
-    temp_arr.each do |s|
-      s_print(s)
-    end
-  end
+  break_sentence(sentence).each { |s| p(s); sleep 1 }
 end
