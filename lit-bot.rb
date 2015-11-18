@@ -1,5 +1,10 @@
 require 'tactful_tokenizer'
 
+# Takes an Array of Strings (phrases)
+# joins them into longer Strings
+# nearly, but not longer than 140 characters.
+# (when the next word would make then string too long)
+# Returns an Array of Strings
 def merge_phrases(phrase_array)
   count = 0
   until phrase_array[count+1] == nil || phrase_array[count].length + phrase_array[count+1].length > 140
@@ -10,28 +15,42 @@ def merge_phrases(phrase_array)
   phrase_array
 end
 
+# Chops Strings at spaces, then rebuilds them until they're
+# nearly, but not longer than 140 characters.
+# (when the next word would make then string too long)
+# Returns and Array of Strings
+def chop_string(s)
+  words = s.split(' ')
+  pos = 0
+  slices = [""]
+  phrase = ""
+  words.each do |word|
+    if phrase.length + word.length < 140
+      phrase = phrase + " " + word
+      slices[pos] = phrase
+    else
+      phrase = word
+      pos += 1
+    end
+  end
+  slices.each { |phrase| phrase.strip! }
+end
+
+# Pass in a String,
+# returns an Array of shorter Strings,
+# depening on what the original contained
 def break_sentence(sentence)
   phrases = []
   if sentence.length > 140
-    if sentence =~ /.{1,140}[,:;].{1,140}/
-      phrases = sentence.split(/([,:;])\s/).each_slice(2).map(&:join).map(&:strip)
-    elsif sentence =~ /.{0,47}[\u201c].{1,46}[\u201d].{0,47}/
-      phrases = sentence.split(/(['\u201c\u201d])/).each_slice(2).map(&:join).map(&:strip)
-    else
-      words = sentence.split(' ')
-      pos = 0
-      phrases = [""]
-      phrase = ""
-      words.each do |word|
-        if phrase.length + word.length < 140
-          phrase = phrase + " " + word
-          phrases[pos] = phrase
-        else
-          phrase = word
-          pos += 1
-        end
+    if sentence =~ /[,:;]/
+      splits = sentence.split(/([,:;])\s/).each_slice(2).map(&:join).map(&:strip)
+      splits.each do |split|
+        chops = chop_string(split)
+        phrases << chops
       end
-      phrases.each { |phrase| phrase.strip! }
+      phrases.flatten!
+    else
+      chop_string(sentence)
     end
   else
     phrases << sentence
@@ -39,13 +58,15 @@ def break_sentence(sentence)
   merge_phrases(phrases)
 end
 
-# s.split(/([?!.])/).each_slice(2).map(&:join).map(&:strip)
-
 tokenizer = TactfulTokenizer::Model.new
 doc = File.open('works/100YearsOfSolitude.txt')
 
 sentences = tokenizer.tokenize_text(doc)
 
 sentences.each do |sentence|
-  break_sentence(sentence).each { |s| p(s); sleep 1 }
+  break_sentence(sentence).each do |s|
+    puts(s)
+    File.write("progfile", s)
+    sleep 1
+  end
 end
