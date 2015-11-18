@@ -1,4 +1,12 @@
 require 'tactful_tokenizer'
+require 'twitter'
+
+lines = File.readlines("testfile.txt")
+
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key    = lines[0]
+  config.consumer_secret = lines[1]
+end
 
 # Takes an Array of Strings (phrases)
 # joins them into longer Strings
