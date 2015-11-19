@@ -16,7 +16,7 @@ sentences = tokenizer.tokenize_text(doc) #break it into sentences
 
 def merge_phrases(phrase_array)
   count = 0
-  until phrase_array[count+1] == nil || phrase_array[count].length + phrase_array[count+1].length > 140
+  until phrase_array[count+1] == nil || (phrase_array[count] + phrase_array[count+1]).length > 140
     phrase_array[count] = phrase_array[count] + " " + phrase_array[count+1]
     phrase_array.delete_at(count+1)
   end
@@ -26,11 +26,9 @@ end
 
 def chop_string(s)
   words = s.split(' ')
-  pos = 0
-  slices = [""]
-  phrase = ""
+  pos, slices, phrase = 0, [""], ""
   words.each do |word|
-    if phrase.length + word.length < 140
+    if (phrase + word).length < 140
       phrase = phrase + " " + word
       slices[pos] = phrase
     else
@@ -46,10 +44,7 @@ def break_sentence(sentence)
   if sentence.length > 140
     if sentence =~ /[,:;]/
       splits = sentence.split(/([,:;])\s/).each_slice(2).map(&:join).map(&:strip)
-      splits.each do |split|
-        chops = chop_string(split)
-        phrases << chops
-      end
+      splits.each { |split| phrases << chop_string(split) }
       phrases.flatten!
     else
       chop_string(sentence)
@@ -67,11 +62,10 @@ sentences.each do |sentence|
 end
 
 start_point = File.read('progfile').to_i #Find place to begin
-                                    #when program stops, it will restart where it stopped.
-sleep 5
+
 #Print each sentence then sleep for random intervals
 to_print[(start_point + 1)..to_print.length].each do |s|
-  # chatterbot.tweet(s)
+  # chatterbot.tweet s
   puts s
   File.write("progfile", to_print.index(s))
   sleep 1 #rand(600..2400)
