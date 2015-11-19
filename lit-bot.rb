@@ -70,10 +70,11 @@ end
 
 start_point = File.read('progfile').to_i #Find place to begin
                                     #when program stops, it will restart where it stopped.
-
+sleep 5
 #Print each sentence then sleep for random intervals
 to_print[(start_point + 1)..to_print.length].each do |s|
-  puts(s)
+  chatterbot.tweet(s)
+  puts s
   File.write("progfile", to_print.index(s))
-  sleep rand(1..3)
+  sleep rand(600..1800)
 end
