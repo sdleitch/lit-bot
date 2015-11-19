@@ -1,18 +1,19 @@
 require 'tactful_tokenizer'
-require 'twitter'
+require 'chatterbot/dsl'
 
-lines = File.readlines("testfile.txt")
+chatterbot = Chatterbot::Bot #new bot
 
-client = Twitter::REST::Client.new do |config|
-  config.consumer_key    = lines[0]
-  config.consumer_secret = lines[1]
-end
+#authenticate bot with Twitter API
+config = YAML::load(File.open('100YearsOf.yml'))
+chatterbot.consumer_key config[:consumer_key]
+chatterbot.consumer_secret config[:consumer_secret]
+chatterbot.secret config[:secret]
+chatterbot.token config[:token]
 
-# Takes an Array of Strings (phrases)
-# joins them into longer Strings
-# nearly, but not longer than 140 characters.
-# (when the next word would make then string too long)
-# Returns an Array of Strings
+tokenizer = TactfulTokenizer::Model.new #new tokenizer
+doc = File.open('works/100YearsOfSolitude.txt') #read the .txt file
+sentences = tokenizer.tokenize_text(doc) #break it into sentences
+
 def merge_phrases(phrase_array)
   count = 0
   until phrase_array[count+1] == nil || phrase_array[count].length + phrase_array[count+1].length > 140
@@ -23,10 +24,6 @@ def merge_phrases(phrase_array)
   phrase_array
 end
 
-# Chops Strings at spaces, then rebuilds them until they're
-# nearly, but not longer than 140 characters.
-# (when the next word would make then string too long)
-# Returns and Array of Strings
 def chop_string(s)
   words = s.split(' ')
   pos = 0
@@ -44,9 +41,6 @@ def chop_string(s)
   slices.each { |phrase| phrase.strip! }
 end
 
-# Pass in a String,
-# returns an Array of shorter Strings,
-# depening on what the original contained
 def break_sentence(sentence)
   phrases = []
   if sentence.length > 140
@@ -66,15 +60,20 @@ def break_sentence(sentence)
   merge_phrases(phrases)
 end
 
-tokenizer = TactfulTokenizer::Model.new
-doc = File.open('works/100YearsOfSolitude.txt')
-
-sentences = tokenizer.tokenize_text(doc)
-
+#Break each sentence
+to_print_array = []
 sentences.each do |sentence|
   break_sentence(sentence).each do |s|
-    puts(s)
-    File.write("progfile", s)
-    sleep 1
+    to_print << s
   end
+end
+
+start_point = File.read('progfile') #Find place to begin
+                                    #when program stops, it will restart where it stopped.
+
+#Print each sentence then sleep for random intervals
+to_print_array.each do |s|
+  puts(s)
+  File.write("progfile", s)
+  sleep rand(1..3)
 end
