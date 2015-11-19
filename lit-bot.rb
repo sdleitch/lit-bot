@@ -63,18 +63,16 @@ end
 #Break each sentence
 to_print = []
 sentences.each do |sentence|
-  break_sentence(sentence).each do |s|
-    to_print << s
-  end
+  break_sentence(sentence).each { |s| to_print << s }
 end
 
 start_point = File.read('progfile').to_i #Find place to begin
                                     #when program stops, it will restart where it stopped.
-sleep 6
+sleep 5
 #Print each sentence then sleep for random intervals
 to_print[(start_point + 1)..to_print.length].each do |s|
-  chatterbot.tweet(s)
+  # chatterbot.tweet(s)
   puts s
   File.write("progfile", to_print.index(s))
-  sleep rand(600..1800)
+  sleep 1 #rand(600..2400)
 end
