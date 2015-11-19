@@ -17,7 +17,7 @@ sentences = tokenizer.tokenize_text(doc) #break it into sentences
 def merge_phrases(phrase_array)
   count = 0
   until phrase_array[count+1] == nil || (phrase_array[count] + phrase_array[count+1]).length > 140
-    phrase_array[count] = phrase_array[count] + " " + phrase_array[count+1]
+    phrase_array[count] = phrase_array[count..count+1].join(" ")
     phrase_array.delete_at(count+1)
   end
   count += 1
