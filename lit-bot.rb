@@ -61,19 +61,19 @@ def break_sentence(sentence)
 end
 
 #Break each sentence
-to_print_array = []
+to_print = []
 sentences.each do |sentence|
   break_sentence(sentence).each do |s|
     to_print << s
   end
 end
 
-start_point = File.read('progfile') #Find place to begin
+start_point = File.read('progfile').to_i #Find place to begin
                                     #when program stops, it will restart where it stopped.
 
 #Print each sentence then sleep for random intervals
-to_print_array.each do |s|
+to_print[(start_point + 1)..to_print.length].each do |s|
   puts(s)
-  File.write("progfile", s)
+  File.write("progfile", to_print.index(s))
   sleep rand(1..3)
 end
