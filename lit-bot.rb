@@ -4,11 +4,10 @@ require 'chatterbot/dsl'
 chatterbot = Chatterbot::Bot #new bot
 
 #authenticate bot with Twitter API
-config = YAML::load(File.open('100YearsOf.yml'))
-chatterbot.consumer_key config[:consumer_key]
-chatterbot.consumer_secret config[:consumer_secret]
-chatterbot.secret config[:secret]
-chatterbot.token config[:token]
+chatterbot.consumer_key ENV[consumer_key]
+chatterbot.consumer_secret ENV[consumer_secret]
+chatterbot.secret ENV[secret]
+chatterbot.token ENV[token]
 
 tokenizer = TactfulTokenizer::Model.new #new tokenizer
 doc = File.open('works/100YearsOfSolitude.txt') #read the .txt file
