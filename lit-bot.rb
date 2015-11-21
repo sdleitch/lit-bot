@@ -62,7 +62,7 @@ end
 
 start_point = File.read('progfile').to_i #Find place to begin
 
-if rand(7) == 6
+if rand(2) == 1
   sleep rand(500)
   tweet(to_print[start_point])
   File.write("progfile", start_point + 1)
