@@ -1,13 +1,21 @@
 require 'tactful_tokenizer'
-require 'chatterbot/dsl'
+require 'twitter'
+# require 'chatterbot/dsl'
 
-chatterbot = Chatterbot::Bot #new bot
+# chatterbot = Chatterbot::Bot #new bot
 
 #authenticate bot with Twitter API
-chatterbot.consumer_key ENV["CONSUMER_KEY"]
-chatterbot.consumer_secret ENV["CONSUMER_SECRET"]
-chatterbot.secret ENV["SECRET"]
-chatterbot.token ENV["TOKEN"]
+# chatterbot.consumer_key ENV["CONSUMER_KEY"]
+# chatterbot.consumer_secret ENV["CONSUMER_SECRET"]
+# chatterbot.secret ENV["SECRET"]
+# chatterbot.token ENV["TOKEN"]
+
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = ENV["CONSUMER_KEY"]
+  config.consumer_secret     = ENV["CONSUMER_SECRET"]
+  config.access_token        = ENV["SECRET"]
+  config.access_token_secret = ENV["TOKEN"]
+end
 
 tokenizer = TactfulTokenizer::Model.new #new tokenizer
 doc = File.open('works/100YearsOfSolitude.txt') #read the .txt file
@@ -64,6 +72,6 @@ start_point = File.read('progfile').to_i #Find place to begin
 
 if rand(2) == 1
   sleep rand(500)
-  tweet(to_print[start_point])
+  client.update(to_print[start_point])
   File.write("progfile", start_point + 1)
 end

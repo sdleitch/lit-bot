@@ -1,3 +1,3 @@
 source "https://rubygems.org"
 gem 'tactful_tokenizer'
-gem 'chatterbot'
+gem 'twitter'
