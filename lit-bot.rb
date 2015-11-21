@@ -71,7 +71,7 @@ end
 start_point = File.read('progfile').to_i #Find place to begin
 
 if rand(2) == 1
-  sleep rand(500)
+  sleep rand(10)
   client.update(to_print[start_point])
   File.write("progfile", start_point + 1)
 end
