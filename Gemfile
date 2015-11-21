@@ -1,3 +1,3 @@
 source "https://rubygems.org"
-gem 'chatterbot'
-gem 'tactful_tokenizer'
+require 'tactful_tokenizer'
+require 'chatterbot/dsl'
