@@ -1,14 +1,5 @@
 require 'tactful_tokenizer'
 require 'twitter'
-# require 'chatterbot/dsl'
-
-# chatterbot = Chatterbot::Bot #new bot
-
-#authenticate bot with Twitter API
-# chatterbot.consumer_key ENV["CONSUMER_KEY"]
-# chatterbot.consumer_secret ENV["CONSUMER_SECRET"]
-# chatterbot.secret ENV["SECRET"]
-# chatterbot.token ENV["TOKEN"]
 
 client = Twitter::REST::Client.new do |config|
   config.consumer_key        = ENV["CONSUMER_KEY"]
