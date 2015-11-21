@@ -70,7 +70,6 @@ end
 
 start_point = File.read('progfile').to_i #Find place to begin
 
-puts 'program - ran'
 if rand(7) == 6
   sleep rand(400)
   client.update(to_print[start_point])
