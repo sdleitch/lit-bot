@@ -62,7 +62,10 @@ end
 start_point = File.read('progfile').to_i #Find place to begin
 
 if rand(7) == 6
+  log '___HIT 6___'
   sleep rand(400)
   client.update(to_print[start_point])
   File.write("progfile", start_point + 1)
+else
+  puts "___MISSED 6___"
 end
