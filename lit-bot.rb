@@ -66,7 +66,7 @@ if rand(7) == 6
   sleep rand(400)
   # client.update(to_print[start_point])
   client.update(tweet)
-  File.write('progfile', start_point + 1)
+  # File.write('progfile', start_point + 1)
   # puts (start_point + 1).to_s
 else
   puts "MISS: Would have tweeted: #{tweet}"
