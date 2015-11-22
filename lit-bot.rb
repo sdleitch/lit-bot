@@ -60,7 +60,7 @@ sentences.each do |sentence|
 end
 
 # start_point = File.read('progfile').to_i #Find place to begin
-tweet = to_print[to_print.index(client.home_timeline.first.full_text) + 1]
+tweet = to_print[to_print.index(client.user_timeline.first.full_text) + 1]
 if rand(7) == 6
   puts "Should tweet: #{tweet}__"
   sleep rand(400)
