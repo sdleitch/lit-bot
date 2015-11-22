@@ -1,12 +1,12 @@
 require 'tactful_tokenizer'
 require 'twitter'
 
-client = Twitter::REST::Client.new do |config|
-  config.consumer_key        = ENV["CONSUMER_KEY"]
-  config.consumer_secret     = ENV["CONSUMER_SECRET"]
-  config.access_token        = ENV["TOKEN"]
-  config.access_token_secret = ENV["SECRET"]
-end
+# client = Twitter::REST::Client.new do |config|
+#   config.consumer_key        = ENV["CONSUMER_KEY"]
+#   config.consumer_secret     = ENV["CONSUMER_SECRET"]
+#   config.access_token        = ENV["TOKEN"]
+#   config.access_token_secret = ENV["SECRET"]
+# end
 
 tokenizer = TactfulTokenizer::Model.new #new tokenizer
 doc = File.open('works/100YearsOfSolitude.txt') #read the .txt file
@@ -59,15 +59,15 @@ sentences.each do |sentence|
   break_sentence(sentence).each { |s| to_print << s }
 end
 
-start_point = File.read('progfile').to_i #Find place to begin
-
-if rand(2) == 1
-  puts '___HIT 6___'
-  # sleep rand(400)
-  client.update(to_print[start_point])
-  puts '___AFTER TWEET___: ' + to_print[start_point]
-  File.write("progfile", start_point + 1)
-  puts (start_point + 1).to_s
+# start_point = File.read('progfile').to_i #Find place to begin
+tweet = to_print[to_print.index(client.home_timeline.first.full_text) + 1]
+if rand(7) == 6
+  puts "Should tweet: #{tweet}__"
+  sleep rand(400)
+  # client.update(to_print[start_point])
+  client.update(tweet)
+  File.write('progfile', start_point + 1)
+  # puts (start_point + 1).to_s
 else
-  puts "___MISSED 6___"
+  puts "MISS: Would have tweeted: #{tweet}"
 end
