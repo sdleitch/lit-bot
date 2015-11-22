@@ -1,12 +1,12 @@
 require 'tactful_tokenizer'
 require 'twitter'
 
-# client = Twitter::REST::Client.new do |config|
-#   config.consumer_key        = ENV["CONSUMER_KEY"]
-#   config.consumer_secret     = ENV["CONSUMER_SECRET"]
-#   config.access_token        = ENV["TOKEN"]
-#   config.access_token_secret = ENV["SECRET"]
-# end
+client = Twitter::REST::Client.new do |config|
+  config.consumer_key        = ENV["CONSUMER_KEY"]
+  config.consumer_secret     = ENV["CONSUMER_SECRET"]
+  config.access_token        = ENV["TOKEN"]
+  config.access_token_secret = ENV["SECRET"]
+end
 
 tokenizer = TactfulTokenizer::Model.new #new tokenizer
 doc = File.open('works/100YearsOfSolitude.txt') #read the .txt file
