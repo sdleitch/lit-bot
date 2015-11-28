@@ -26,7 +26,7 @@ def chop_string(s)
   words = s.split(' ')
   pos, slices, phrase = 0, [""], ""
   words.each do |word|
-    if (phrase + word).length < 140
+    if (phrase + word).length < 139
       phrase = phrase + " " + word
       slices[pos] = phrase
     else
@@ -62,7 +62,7 @@ end
 # start_point = File.read('progfile').to_i #Find place to begin
 tweet = to_print[to_print.index(client.user_timeline.first.full_text) + 1]
 if rand(7) == 6
-  puts "Should tweet: #{tweet}__"
+  puts "Should tweet: #{tweet}"
   sleep rand(400)
   # client.update(to_print[start_point])
   client.update(tweet)
