@@ -14,7 +14,7 @@ sentences = tokenizer.tokenize_text(doc) #break it into sentences
 
 def merge_phrases(phrase_array)
   count = 0
-  until phrase_array[count+1] == nil || (phrase_array[count] + phrase_array[count+1]).length > 140
+  until phrase_array[count+1] == nil || (phrase_array[count] + phrase_array[count+1]).length > 139
     phrase_array[count] = phrase_array[count..count+1].join(" ")
     phrase_array.delete_at(count+1)
   end
@@ -26,7 +26,7 @@ def chop_string(s)
   words = s.split(' ')
   pos, slices, phrase = 0, [""], ""
   words.each do |word|
-    if (phrase + word).length < 139
+    if (phrase + word).length < 140
       phrase = phrase + " " + word
       slices[pos] = phrase
     else
